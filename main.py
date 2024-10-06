@@ -1,9 +1,6 @@
-#!/usr/bin/python3
-# UNIX Encoding Below!
+#!/usr/bin/python3 
+#
 # PyPrompt - An alternative cross-platform terminal shell made in Python!
-# Can be used in Windows, Linux, macOS, Android, iOS
-# Yes iOS. Search up Python3IDE in the App Store
-# Make sure to buy its premium option, else it won't run :(
 # PyPrompt made by
 #    _             _      _      _            ___    __ ___  
 #   (_)           | |    (_)    | |          / _ \  / // _ \ 
@@ -15,8 +12,8 @@
 # |__/  
 #
 # Based on Termithon by idkDwij
-# Thanks to idkDwij for the base code of Termithon
-# Thanks to BigBoyTaco for fixing the 'calc' command!
+# Testing a new engine! Yay! Finally no more dependence on Termithon (i hope lol)
+# Some commands were not made by me, check CREDITS for info about devs
 # btw do not trust anyone named theopensour or thesouropen or theclosedbitter
 # 
 # Billions of imports ahead!
@@ -48,15 +45,20 @@
 #                ..~+=...  
 #
 from __future__ import division
+from __future__ import print_function
+import platform
+
+global uname
+uname = platform.uname()
+
 import os
 import string
 import random
-import socket
 from random import choice
 from random import randint
-import platform
+import socket
 import fnmatch
-from time import sleep
+import time
 import uuid
 import py_compile
 import getpass
@@ -64,8 +66,49 @@ import speedtest
 import geocoder
 import wget
 import pyvim
+# 69 lines nice lol
+import pyuac
+from http.server import BaseHTTPRequestHandler, HTTPServer
 import requests
+import sys
+import openai
+import pathlib
+import warnings
 
+if uname.system == "Windows":
+    from ctypes import *
+else:
+  pass
+from blessed import *
+from blessed import Terminal
+
+try:
+    pass
+except Warning:
+    pass
+
+try:
+    pass
+except Exception:
+    pass
+
+term = Terminal()
+
+warnings.simplefilter("ignore")
+warnings.filterwarnings("ignore")
+warnings.filterwarnings("ignore", category=FutureWarning)
+
+# Fixes 'distutils' error in PyInstaller
+if not sys.warnoptions:
+    import warnings
+    warnings.simplefilter("ignore")
+    warnings.filterwarnings("ignore")
+    warnings.filterwarnings("ignore", category=FutureWarning)
+
+# Checks if Python version is more than 3.9 (Will only take effect on uncompiled build)
+if sys.version_info < (3, 9):
+    sys.stderr.write('You need Python 3.9 or later\n')
+    sys.exit(1)
 
 # Aw man no more neofetch screen :(
 hostname = socket.gethostname()
@@ -73,64 +116,44 @@ curr_user = getpass.getuser()
 global echo_on
 
 
-#def warnings():
-#    print("THIS IS A BETA BUILD OF PYPROMPT")
-#    print("NOTE THAT MOST COMMANDS MIGHT NOT WORK OR BE UNSTABLE")
-#    print("IT IS RECOMMENDED TO INSTALL PYTHON FOR BETA BUILDS")
-
-
 # Ten Billion Imports Later...
-print("=" * 40, "PyPrompt", "=" * 40)
-joalricha = '''
-    _             _      _      _            ___    __ ___  
-   (_)           | |    (_)    | |          / _ \  / // _ \ 
-    _  ___   __ _| |_ __ _  ___| |__   __ _| (_) |/ /| (_) |
-   | |/ _ \ / _` | | '__| |/ __| '_ \ / _` |> _ <| '_ \__, |
-   | | (_) | (_| | | |  | | (__| | | | (_| | (_) | (_) |/ / 
-   | |\___/ \__,_|_|_|  |_|\___|_| |_|\__,_|\___/ \___//_/  
-  _/ |                                                      
- |__/                                                       
 
-'''
-taco = '''
-
-  ____  _       ____           _______              
- |  _ \(_)     |  _ \         |__   __|             
- | |_) |_  __ _| |_) | ___  _   _| | __ _  ___ ___  
- |  _ <| |/ _` |  _ < / _ \| | | | |/ _` |/ __/ _ \ 
- | |_) | | (_| | |_) | (_) | |_| | | (_| | (_| (_) |
- |____/|_|\__, |____/ \___/ \__, |_|\__,_|\___\___/ 
-           __/ |             __/ |                  
-          |___/             |___/                   
-
-'''
-dwij = '''
-
-  _     _ _    _____           _ _ 
- (_)   | | |  |  __ \         (_|_)
-  _  __| | | _| |  | |_      ___ _ 
- | |/ _` | |/ / |  | \ \ /\ / / | |
- | | (_| |   <| |__| |\ V  V /| | |
- |_|\__,_|_|\_\_____/  \_/\_/ |_| |
-                               _/ |
-                              |__/ 
-
-'''
-print('Made by:' + joalricha + 'it says joalricha https://github.com/joalricha869')
-print(" ")
-print('Thanks to ' + taco + 'for help  https://github.com/BigBoyTaco')
-print(" ")
-print('Based on Termithon by' + dwij + 'https://github.com/IdkDwij/Termithon')
-print(" ")
-print("The source is at my GitHub page! 'https://github.com/joalricha869/PyPrompt'")
-print("Type in 'help' for the command list.")
-print(" ")
-#warnings()
+global pypromptascii
+pypromptascii = '''
+    _____       _____                           _   
+   |  __ \     |  __ \                         | |  
+   | |__) |   _| |__) | __ ___  _ __ ___  _ __ | |_ 
+   |  ___/ | | |  ___/ '__/ _ \| '_ ` _ \| '_ \| __|
+   | |   | |_| | |   | | | (_) | | | | | | |_) | |_ 
+   |_|    \__, |_|   |_|  \___/|_| |_| |_| .__/ \__|
+           __/ |                         | |        
+          |___/                          |_|        '''
+centerASCII = pypromptascii.center(50)
+print(term.green + centerASCII + term.normal)
+def warnings():
+    warningASCII = '''
+._________________________________________________________________________________.
+|                                                                                 |
+|     db   d8b   db  .d8b.  d8888b. d8b   db d888888b d8b   db  d888b       db    |
+|     88   I8I   88 d8' `8b 88  `8D 888o  88   `88'   888o  88 88' Y8b      88    |
+|     88   I8I   88 88ooo88 88oobY' 88V8o 88    88    88V8o 88 88           YP    |
+|     Y8   I8I   88 88~~~88 88`8b   88 V8o88    88    88 V8o88 88  ooo            |
+|     `8b d8'8b d8' 88   88 88 `88. 88  V888   .88.   88  V888 88. ~8~      db    |
+|      `8b8' `8d8'  YP   YP 88   YD VP   V8P Y888888P VP   V8P  Y888P       YP    |'''
+    print(term.bold_red(warningASCII))
+    print(term.bold_red("|                                                                                 |"))
+    print(term.bold_red("|                                                                                 |"))
+    print(term.bold_red("|                      THIS IS A BETA BUILD OF PYPROMPT                           |"))
+    print(term.bold_red("|            NOTE THAT MOST COMMANDS MIGHT NOT WORK OR BE UNSTABLE                |"))
+    print(term.bold_red("|             IT IS RECOMMENDED TO INSTALL PYTHON FOR BETA BUILDS                 |"))
+    print(term.bold_red("|                                                                                 |"))
+    print(term.bold_red("|_________________________________________________________________________________|"))
+# if not beta build disable 'warnings()'
+warnings()
 print(" ")
 hostnamecomputer = socket.gethostname()
 global current_dir
 current_dir = os.getcwd()
-
 
 def listToString(s):
     str1 = ""
@@ -138,71 +161,99 @@ def listToString(s):
         str1 += ele
     return str1
 
-
 commands = '''
-  _____       _                       _           _ 
- |_   _|     | |                     | |         | |
-   | |  _ __ | |_ ___  __ _ _ __ __ _| |_ ___  __| |
-   | | | '_ \| __/ _ \/ _` | '__/ _` | __/ _ \/ _` |
-  _| |_| | | | ||  __/ (_| | | | (_| | ||  __/ (_| |
- |_____|_| |_|\__\___|\__, |_|  \__,_|\__\___|\__,_|
-                       __/ |                        
-                      |___/                         
-
 DIR                     (Integrated dir/ls command. To use vanilla dir on Windows, Enter CMD Mode and type dir.)
 IP                      (Gives you your IP)
 HOSTNAME                (Gives you your Computer's ID)
 MAC                     (Retrieves the Physical MAC Address of The Device)
 PING                    (lets you ping a website)
-CALC                    (A simple calculator)
+CALC                    (A simple CLI calculator)
 PASSGEN                 (A very efficient password generator)
 SYSINFO                 (Gets relevant system info)
 TEST                    (Tests PyPrompt Sample Command)
 MAILGEN                 (Generates dummy E-Mail Addresses)
 VER                     (Reports PyPrompt Version)
 CLEAR                   (Clears screen)
-LOADBARTEST             (Tests the loadbar)
 INTRO                   (Displays initial text)
 SQRT                    (Enter a number and it will calculate the square root)
 DATE                    (Displays date)
 CD                      (Navigate through folders) (NOTE: Applicable on PyPrompt Mode ONLY!. If you use CMD/BASH directories will change)
 IPLOCATION              (Find the physical location of your IP address)
 SPEEDTEST               (Speedtest.net but built into PyPrompt!)
-ENCRYPT                 (Uses the RSA Algorithm to encrypt a message!)
-TROUBLESHOOT            (Troubleshoots extra modules necessary for PyPrompt to run)
-SSH                     (An SSH Client made in Python) (To use vanilla ssh use either CMD/BASH MODE)
 FILESEARCH              (Searches files via their file name)
 FILEDOWNLOADER          (Download any file via their url)
-UNHELP                  (i'm not sure what this is. it just exists.)
+IDK                     (i'm not sure what this is. it just exists.)
 LOCATOR                 (Locate basically any location in the planet)
 DEVHELP                 (Detailed info about PyPrompt useful for troubleshooting)
 COMPILER                (Compile any standard Python file to a *.pyc format)
-PYVIM                   (Vim clone 'MADE BY jonathanslenders On GitHub')
-PYINSTALLER             (Another pyinstaller compiler)
+PYVIM                   (Vim clone 'MADE BY jonathanslenders On GitHub') WILL REQUIRE PYTHON!!
+PYINSTALLER             (Another Python compiler) REQUIRES PYTHON AND PYINSTALLER TO BE INSTALLED!
 EZFORMAT                (Simplified disk formatter) ONLY WORKS ON WINDOWS
-EZSHUTDOWN              (Shutdown or Reboot your PC) ONLY WORKS ON WINDOWS
 EZTASKKILL              (Eliminate some process without using the task mamager) ONLY WORKS ON WINDOWS
 WEATHER                 (Gets the weather from any city) Made by imkaka. Github: https://github.com/imkaka
-
-PyPrompt Modes:
-
-CMD Mode (If usual Windows Shell commands are broken in PyPrompt, just use the 'cmd' command and you are in vanilla Command Prompt.)
-         (NOTE: You are still in the PyPrompt App. Exit by typing exit in CMD Mode)
-Bash Mode (Same as CMD Mode but you can run UNIX commands. Again, this is just a sidemode. You can return by typing exit or logoff.)
+MAGIC8BALL              (A virtual Magic-8-Ball made in Python)
+CREDITS                 (Credits for all commands & dev list)
+BSOD                    (Cause a BSOD) Windows Only
+WIFIPASS                (Get the password from your WiFi) Windows Only
+LOCALHOSTER             (Create a localhost webserver via the terminal)
+CHATGPT                 (ChatGPT in a Terminal) Requires OpenAI
+WORDLE                  (Wordle in a CLI App)
+SYSTEM32NUKER           (The name is self-explanatory)
 
 '''
 
+linuxcommands='''
+DIR                     (Integrated dir/ls command. To use vanilla dir on Windows, Enter CMD Mode and type dir.)
+IP                      (Gives you your IP)
+HOSTNAME                (Gives you your Computer's ID)
+MAC                     (Retrieves the Physical MAC Address of The Device)
+PING                    (lets you ping a website)
+CALC                    (A simple CLI calculator)
+PASSGEN                 (A very efficient password generator)
+SYSINFO                 (Gets relevant system info)
+TEST                    (Tests PyPrompt Sample Command)
+MAILGEN                 (Generates dummy E-Mail Addresses)
+VER                     (Reports PyPrompt Version)
+CLEAR                   (Clears screen)
+INTRO                   (Displays initial text)
+SQRT                    (Enter a number and it will calculate the square root)
+DATE                    (Displays date)
+CD                      (Navigate through folders) (NOTE: Applicable on PyPrompt Mode ONLY!. If you use CMD/BASH directories will change)
+IPLOCATION              (Find the physical location of your IP address)
+SPEEDTEST               (Speedtest.net but built into PyPrompt!)
+FILESEARCH              (Searches files via their file name)
+FILEDOWNLOADER          (Download any file via their url)
+IDK                     (i'm not sure what this is. it just exists.)
+LOCATOR                 (Locate basically any location in the planet)
+DEVHELP                 (Detailed info about PyPrompt useful for troubleshooting)
+COMPILER                (Compile any standard Python file to a *.pyc format)
+PYVIM                   (Vim clone 'MADE BY jonathanslenders On GitHub') WILL REQUIRE PYTHON!!
+PYINSTALLER             (Another Python compiler) REQUIRES PYTHON AND PYINSTALLER TO BE INSTALLED!
+WEATHER                 (Gets the weather from any city) Made by imkaka. Github: https://github.com/imkaka
+MAGIC8BALL              (A virtual Magic-8-Ball made in Python)
+CREDITS                 (Credits for all commands & dev list)
+LOCALHOSTER             (Create a localhost webserver via the terminal) (REAQUIRES A FILE NAMED test.html to runs)
+CHATGPT                 (ChatGPT in a Terminal)
+BTCMAN                  (Bitcoin Manager)
+WORDLE                  (Wordle in a CLI App)
+
+'''
 
 def whatiscommand(current_dir):
     args = cmd.split()
     if cmd == 'help':
-        print(commands)
+        global uname
+        uname = platform.uname()
+        if uname.system == "Windows":
+            print(commands)
+        else:
+            print(linuxcommands)
         main(current_dir)
     elif cmd == 'dir':
         print(os.listdir(current_dir))
         main(current_dir)
     elif cmd == 'exit':
-        exit()
+        sys.exit(1)
     elif cmd == 'ip':
         print("Your IP Address is " + getip())
         main(current_dir)
@@ -253,14 +304,8 @@ def whatiscommand(current_dir):
     elif cmd == "iplocation":
         iplocation()
         main(current_dir)
-    elif "encrypt" in cmd:
-        encryptdecrypt()
-        main(current_dir)
-    elif cmd == "unhelp":
+    elif cmd == "idk":
         print("The command is 'ignore'")
-        main(current_dir)
-    elif cmd == "troubleshoot":
-        troubleshoot()
         main(current_dir)
     elif "cd" in cmd:
         args.remove('cd')
@@ -278,9 +323,6 @@ def whatiscommand(current_dir):
         else:
             print('The system cannot find the path specified. \n')
             main(current_dir)
-    elif cmd == "ssh":
-        sshclient()
-        main(current_dir)
     elif cmd == "filesearch":
         fileSearch()
         main(current_dir)
@@ -296,17 +338,47 @@ def whatiscommand(current_dir):
     elif cmd == "compiler":
         pyCompiler()
         main(current_dir)
+    elif cmd == "wifipass":
+        heckWifi()
+        main(current_dir)
     elif cmd == "ezformat":
         ezformatter()
-        main(current_dir)
-    elif cmd == "ezshutdown":
-        ezSHUTDOWN()
         main(current_dir)
     elif cmd == "eztaskkill":
         eztaskkill()
         main(current_dir)
+    elif cmd == "credits":
+        credits()
+        main(current_dir)
     elif cmd == "weather":
         GetCurrentWeather()
+        main(current_dir)
+    elif cmd == "magic8ball":
+        magic8Ball()
+    elif cmd == "bsod":
+        var1 = platform.uname()
+        if var1.system == "Windows":
+            bsod()
+        else:
+            print("BSOD is only supported on Windows")
+            main(current_dir)
+    elif cmd == "shutdown":
+        shutdown()
+        main(current_dir)
+    elif cmd == "welcome":
+        welcome()
+        main(current_dir)
+    elif cmd == "localhoster":
+        localhoster()
+        main(current_dir)
+    elif cmd == "chatgpt":
+        chatGPT()
+        main(current_dir)
+    elif cmd == "wordle":
+        wordle()
+        main(current_dir)
+    elif cmd == "system32nuker":
+        system32nuker()
         main(current_dir)
     elif str(cmd) in cmd:
         print("This MUST be a shell command in the OS else your command won't work!")
@@ -314,7 +386,6 @@ def whatiscommand(current_dir):
         main(current_dir)
     else:
         error()
-
 
 def main(current_dir):
     global main
@@ -324,22 +395,22 @@ def main(current_dir):
     cmd = input(current_dir + '>')
     whatiscommand(current_dir)
 
+global osver
+osver = platform.platform()
 
-def ver():
-    print("PyPrompt Version: " + y)
-    print("(C) 2022 joalricha869, All Rights Reserved.")
-
+global architecture
+architecture = platform.architecture()
 
 def getSystemInfo():
     print("=" * 40, "System Information", "=" * 40)
-    global uname
-    uname = platform.uname()
-    print(f"System: {uname.system}")
+    print(f"System Base: {uname.system}")
+    print(f"Operating System Version: {osver}")
     print(f"Node Name: {uname.node}")
     print(f"Release: {uname.release}")
     print(f"Version: {uname.version}")
     print(f"Machine: {uname.machine}")
     print(f"Processor: {uname.processor}")
+    print(f"Processor Architecture: {architecture}")
     print("System Info Retrieved!")
 
 
@@ -350,6 +421,7 @@ def calc():
         first_number = float(numbers[1])
         second_number = float(numbers[3])
         print(first_number + second_number)
+        # LMAO 420 lines
     elif "-" in cmd:
         numbers = cmd.split()
         first_number = float(numbers[1])
@@ -383,6 +455,7 @@ def passGen():
     print("Is your Generated Password: ", password)
     repeatGen = input("Generate another one? ")
     if repeatGen == "yes":
+        # 420 lines lol
         passGen()
     else:
         main(current_dir)
@@ -410,11 +483,12 @@ def clear():
     os.system('cls||clear')
     main(current_dir)
 
-
 def error():
+
     if (cmd == ""):
         main(current_dir)
     else:
+        
         print("'" + str(cmd) + "'" + ''' is not recognized as an internal or external command''')
         print("For more help go to: https://github.com/joalricha869/PyPrompt or https://github.com/IdkDwij/Termithon")
         main(current_dir)
@@ -460,20 +534,15 @@ def progressbar():
 
     loadbar(0, l, prefix='Generating...', suffix='Done!', length=l)
     for i, item in enumerate(items):
-        sleep(0.1)
+        time.sleep(0.1)
         loadbar(i + 1, l, prefix='Generating...', suffix='Done!', length=l)
 
 
 def intro():
-    print("=" * 40, "PyPrompt", "=" * 40)
-    print('Made by:' + joalricha + 'it says joalricha869 https://github.com/joalricha869')
+    print(term.green + centerASCII + term.normal)
     print(" ")
-    print('Thanks to ' + taco + 'for help  https://github.com/BigBoyTaco')
+    warnings()
     print(" ")
-    print('Based on Termithon Shell by' + dwij + 'https://github.com/IdkDwij/Termithon')
-    print(" ")
-    print("Type in 'help' for the command list.")
-    print("")
 
 
 def sqrt():
@@ -507,17 +576,17 @@ def speedtestapp():
     Your choice: '''))
 
     if option < 1 or option > 4:
-        sleep(2)
-        print('You have entered wrong choice, please enter again with values from 1 to 4')
+        time.sleep(2)
+        print('Option Non-Existent')
     else:
-        sleep(1)
+        time.sleep(1)
         print()
-        print('Pls wait, test in progress...')
+        print('Testing your Internet Download Speeds')
         print()
         down_speed = round(speed.download() / 1000000, 3)
         up_speed = round(speed.upload() / 1000000, 3)
         print('One more sec please...')
-        sleep(1.5)
+        time.sleep(1.5)
         print()
         if option == 1:
             print('Your Download speed is: ', down_speed, 'Mbps')
@@ -532,254 +601,12 @@ def speedtestapp():
             speed.get_servers(s)
             print(speed.results.ping, 'ms')
         else:
-            print("Either you have a VERY unstable internet connection or you don't have internet. Please try again...")
+            print("Test Failed: Couldn't connect to Speedtest")
 
 
 def iplocation():
     g = geocoder.ipinfo('me')
     print(g.latlng)
-
-
-def encryptdecrypt():
-    def isPrime(n):
-        prime = [True for i in range(n + 1)]
-        p = 2
-        while p * p <= n:
-            if prime[p] == True:
-                for i in range(p * p, n + 1, p):
-                    prime[i] = False
-            p += 1
-
-        return prime[n]
-
-    def gcd(a, b):
-        while b != 0:
-            r = a % b
-            a = b
-            b = r
-        return a
-
-    def Multiplicative_inverse(a, b):
-        s1 = 1
-        s2 = 0
-        m = b
-        while b != 0:
-            q = a // b
-            r = a % b
-            a = b
-            b = r
-            s = s1 - q * s2
-            s1 = s2
-            s2 = s
-
-        if s1 < 0:
-            s1 += m
-
-        return s1
-
-    def powermod(x, y, p):
-        res = 1
-
-        x = x % p
-        while (y > 0):
-
-            if (y % 2) == 1:
-                res = (res * x) % p
-
-            y = y // 2
-            x = (x * x) % p
-
-        return res
-
-    if __name__ == '__main__':
-        while (True):
-            res = input(
-                'Do you want to enter prime numbers (y) or let the algorithm do it for you (n) or exit (e)? (y/n/e): ')
-            if res == 'y':
-                while True:
-                    p = 13
-                    p = int(input('Enter a prime number: '))
-                    if isPrime(p):
-                        break
-                    else:
-                        print(p, 'is not a prime number')
-                        continue
-
-                while True:
-                    q = 17
-                    q = int(input('Enter a different prime number: '))
-                    if isPrime(q) and (p * q > 26):
-                        break
-                    else:
-                        print(
-                            'Both the prime numbers are same!! or product of both the prime numbers is less than 26!!')
-                        continue
-
-                n = p * q
-                phi_n = (p - 1) * (q - 1)
-                a = 19
-                while True:
-                    a = int(input('Enter a number such that Greatest Common Divisor of that number with ' + str(
-                        phi_n) + ' is 1: '))
-                    if gcd(a, phi_n) != 1:
-                        continue
-                    else:
-                        break
-
-                b = Multiplicative_inverse(a, phi_n)
-                message = input('Enter the message to be encrypted (lower case): ')
-                message = message.lower()
-
-                encrypted_string = ""
-                encrypted_num = []
-
-                for i in range(len(message)):
-                    ch = message[i]
-                    if ch != ' ':
-                        m = ord(ch) - 97
-                        e = powermod(m, a, n)
-                        encrypted_num.append(e)
-                        encrypted_string += chr(e % 26 + 97)
-                    else:
-                        encrypted_string += ' '
-
-                print('Encrypted message is:', encrypted_string)
-                print(encrypted_num)
-                res = input("Do you want to decrypt it too? (y/n): ")
-                if res == 'y':
-                    decrypted = ''
-                    j = 0
-                    for i in range(len(encrypted_string)):
-                        ch = message[i]
-                        if ch != ' ':
-                            e = encrypted_num[j]
-                            m = powermod(e, b, n)
-                            ch = chr(m + 97)
-                            decrypted += ch
-                            j += 1
-                        else:
-                            decrypted += ' '
-
-                    print("Decrypted message is:", decrypted)
-                else:
-                    ans = input("Do you want to continue? (y/n): ")
-                    if ans == 'y':
-                        continue
-                    else:
-                        break
-
-            elif res == 'n':
-                p = 13
-                q = 17
-                n = p * q
-                a = 5
-                b = 77
-                message = input('Enter the message to be encrypted (lower case): ')
-                message = message.lower()
-
-                encrypted_string = ""
-                encrypted_num = []
-
-                for i in range(len(message)):
-                    ch = message[i]
-                    if ch != ' ':
-                        m = ord(ch) - 97
-                        e = powermod(m, a, n)
-                        encrypted_num.append(e)
-                        encrypted_string += chr(e % 26 + 97)
-                    else:
-                        encrypted_string += ' '
-
-                print('Encrypted message is:', encrypted_string)
-                res = input("Do you want to decrypt it too? (y/n): ")
-                if res == 'y':
-                    decrypted = ''
-                    j = 0
-                    for i in range(len(encrypted_string)):
-                        ch = encrypted_string[i]
-                        if ch != ' ':
-                            e = encrypted_num[j]
-                            m = powermod(e, b, n)
-                            ch = chr(m + 97)
-                            decrypted += ch
-                            j += 1
-                        else:
-                            decrypted += ' '
-
-                    print("Decrypted message is:", decrypted)
-                else:
-                    ans = input("Do you want to continue? (y/n): ")
-                    if ans == 'y':
-                        continue
-                    else:
-                        break
-            elif res == 'e':
-                break
-            else:
-                print('Invalid command!')
-                continue
-
-
-def troubleshoot():
-    confirmation = input("Troubleshoot Modules? ")
-    if confirmation == "yes":
-        print("Uninstalling wget")
-        os.system("pip uninstall wget")
-        os.system("cls||clear")
-        print("Uninstalling Speedtest")
-        os.system("pip uninstall speedtest-cli")
-        os.system("cls||clear")
-        print("Uninstalling geocoder")
-        os.system("pip uninstall geocoder")
-        os.system("cls||clear")
-        print("Uninstalling paramiko")
-        os.system("pip uninstall paramiko")
-        os.system("cls||clear")
-        print("reinstalling...")
-        print("Now Reinstalling Modules")
-        print("Installing wget")
-        os.system("pip install wget")
-        os.system("cls||clear")
-        print("Installing Speedtest")
-        os.system("pip install speedtest-cli")
-        os.system("cls||clear")
-        print("Installing geocoder")
-        os.system("pip install geocoder")
-        os.system("cls||clear")
-        print("Installing paramiko")
-        os.system("pip install paramiko")
-        os.system("cls||clear")
-        print("Installing Scripts")
-        os.system("pip install Scripts")
-        os.system("cls||clear")
-        os.system("cls||clear")
-        print("PyPrompt Closing in 3 seconds")
-        os.system("cls||clear")
-        print("PyPrompt Closing in 2 seconds")
-        os.system("cls||clear")
-        print("PyPrompt Closing in 1 second")
-        exit()
-
-def sshclient():
-    print("This may have compatability issues with earlier versions of Python.")
-    print("Make sure you have Python 3.9 or later!")
-    print("DISCLAIMER: This software can't be used for any type of illegal activity.")
-    print("What you do here is now your OWN RESPONSIBILITY!!!")
-    username = input("Enter username: ")
-    hostname = input("Enter hostname: ")
-    # port = input("Enter Port: ")
-    # password = input("Enter Password: ")
-    command = os.system("ssh " + username + "@" + hostname)
-    os.system(command)
-    # Requires Internet
-    # paramiko.util.log_to_file('paramiko.log')
-    # s = paramiko.SSHClient()
-    # s.load_system_host_keys()
-    # s.connect(hostname, port, username, password)
-    # stdin, stdout, stderr = s.exec_command('ifconfig')
-    # print(stdout.read())
-    # s.close()
-    main(current_dir)
 
 
 def fileSearch():
@@ -806,10 +633,10 @@ def locator():
 def devHelp():
     print("----------PyPrompt System Details----------\n")
     print("PYPROMPT VERSION: " + y)
-    print("TERMITHON KERNEL VERSION: 0.1.3 (RELEASE-SKU)")
-    print("CODENAME: SYSTEM UPDATE")
-    print("LITE: NO")
-    print("LEGACY PYTHON SUPPORT: ONLY LITE APPLICABLE")
+    print("TERMITHON KERNEL VERSION: 0.1.4 (MODIFIED)")
+    print("CODENAME: ARCH")
+    print(f"OPERATING SYSTEM: {uname.system}")
+    print(f"OS VERSION: {osver}")
 
 
 def pyCompiler():
@@ -819,7 +646,6 @@ def pyCompiler():
 
 def testModules():
     print(pyvim.__version__)
-    
 
 
 def ezformatter():
@@ -839,23 +665,6 @@ def ezformatter():
     os.system("format " + volume + "/FS:" + filesystem + "/V:" + volumename + formattype)
 
 
-def ezSHUTDOWN():
-    print("Shutdown / Reboot your PC")
-    print(" ")
-    print("In case you REALLY don't know how to shutdown your PC......")
-    shutdownconf = input("(S)hutdown or (R)eboot: ")
-    if shutdownconf == "S":
-        os.system("shutdown /s /t 0")
-    elif shutdownconf == "s":
-        os.system("shutdown /s /t 0")
-    elif shutdownconf == "R":
-        os.system("shutdown /r /t 0")
-    elif shutdownconf == "r":
-        os.system("shutdown /r /t 0")
-    else:
-        print("Either type in 'R' or 'S'")
-        main(current_dir)
-
 def eztaskkill():
     print("Kill an Annoying Process")
     print(" ")
@@ -871,8 +680,8 @@ def eztaskkill():
 
 def GetCurrentWeather():
     def get_temperature(json_data):
-        temp_in_celcius = json_data['main']['temp']
-        return temp_in_celcius
+        temp_in_farenheit = json_data['main']['temp']
+        return temp_in_farenheit
 
     def get_weather_type(json_data):
         weather_type = json_data['weather'][0]['description']
@@ -890,13 +699,18 @@ def GetCurrentWeather():
         temperature = get_temperature(json_data)
         wind_speed = get_wind_speed(json_data)
         weather_details = ''
-        return weather_details + ("The weather in {} is currently {} with a temperature of {} degrees and wind speeds reaching {} km/ph".format(city, weather_type, temperature, wind_speed))
+        return weather_details + ("The weather in {} is currently {} with a temperature of {} degrees farenheit and wind speeds reaching {} km/ph".format(city, weather_type, temperature, wind_speed))
 
 
     def weather():
-        api_address = 'https://api.openweathermap.org/data/2.5/weather?q=Sydney,au&appid=a10fd8a212e47edf8d946f26fb4cdef8&q='
-        city = input("Input City Name: ")
-        units_format = "&units=metric"
+        print("Gather the Weather!")
+        print(" ")
+        print("NOTE: The inputs are CASE-SENSITIVE!!!")
+        print("Any wrong misspell and PyPrompt will crash")
+        city = input("Please Input City Name: ")
+        countrycode = input("Please Input Country Code (ie. us, mx): ")
+        api_address = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + ',' + countrycode + '&appid=a10fd8a212e47edf8d946f26fb4cdef8&q='
+        units_format = "&units=imperial"
         final_url = api_address + city + units_format
         json_data = requests.get(final_url).json()
         weather_details = get_weather_data(json_data, city)
@@ -907,11 +721,406 @@ def GetCurrentWeather():
 
     weather()
 
+def magic8Ball():
+    title = '''
 
-y = "1.5.1.release"
+        __  __                        __                 ____         ___             __  __ 
+    F  \/  ]     ___ _     ___ _   LJ    ____        F __ J       F _ ",   ___ _   LJ  LJ 
+    J |\__/| L   F __` L   F __` L       F ___J.     J `--' L     J `-'(|  F __` L  FJ  FJ 
+    | |`--'| |  | |--| |  | |--| |  FJ  | |---LJ     / ,--. \     | ,--.\ | |--| | J  LJ  L
+    F L    J J  F L__J J  F L__J J J  L F L___--.    F L__J J     F L__J \F L__J J J  LJ  L
+    J__L    J__LJ\____,__L )-____  LJ__LJ\______/F   J\______/L   J_______J\____,__LJ__LJ__L
+    |__L    J__| J____,__FJ\______/F|__| J______F     J______F    |_______FJ____,__F|__||__|
+                            J______F                                                         
+    '''
+    ball = '''
+            ____
+        ,dP9CGG88@b,
+    ,IP  _   Y888@@b,
+    dIi  (_)   G8888@b
+    dCII  (_)   G8888@@b
+    GCCIi     ,GG8888@@@
+    GGCCCCCCCGGG88888@@@
+    GGGGCCCGGGG88888@@@@...
+    Y8GGGGGG8888888@@@@P.....
+    Y88888888888@@@@@P......
+    `Y8888888@@@@@@@P'......
+        `@@@@@@@@@P'.......
+            """"........
+    '''
 
-# Changes from 1.5.1.release.candidate
-# ____________________________________
-# - Release of 1.5.1 (Stable Build)
+
+    def magicBall():
+        responses = ["It is certain.", 
+        "It is decidedly so.", 
+        "Without a doubt.", 
+        "Yes definitely.", 
+        "You may rely on it.", 
+        " As I see it, yes.", 
+        "Most likely.", 
+        "Outlook good.", 
+        "Yes.", 
+        "Signs point to yes.", 
+        "Reply hazy, try again.", 
+        "Ask again later.", 
+        "Better not tell you now.", 
+        "Cannot predict now.", 
+        "Concentrate and ask again.", 
+        "Don't count on it.", 
+        "My reply is no.", 
+        "My sources say no.", 
+        "Outlook not so good.", 
+        "Very doubtful."]
+        
+        question = input("What do you want to ask the Magic 8 Ball? ")
+        if question == str(question):
+            print(random.choice(responses))
+            again = input("Run Again? ")
+            if again == "yes":
+                magicBall()
+            else:
+                main(current_dir)
+        else:
+            print(random.choice(responses))
+            again2 = input("Run Again? ")
+            if again2 == "yes":
+                magicBall()
+            else:
+                main(current_dir)
+
+    def M8B():
+        print(title)
+        print(ball)
+        magicBall()
+
+
+    M8B()
+
+joalricha = '''
+    _             _      _      _            ___    __ ___  
+   (_)           | |    (_)    | |          / _ \  / // _ \ 
+    _  ___   __ _| |_ __ _  ___| |__   __ _| (_) |/ /| (_) |
+   | |/ _ \ / _` | | '__| |/ __| '_ \ / _` |> _ <| '_ \__, |
+   | | (_) | (_| | | |  | | (__| | | | (_| | (_) | (_) |/ / 
+   | |\___/ \__,_|_|_|  |_|\___|_| |_|\__,_|\___/ \___//_/  
+  _/ |                                                      
+ |__/                                                       
+
+'''
+taco = '''
+
+  ____  _       ____           _______              
+ |  _ \(_)     |  _ \         |__   __|             
+ | |_) |_  __ _| |_) | ___  _   _| | __ _  ___ ___  
+ |  _ <| |/ _` |  _ < / _ \| | | | |/ _` |/ __/ _ \ 
+ | |_) | | (_| | |_) | (_) | |_| | | (_| | (_| (_) |
+ |____/|_|\__, |____/ \___/ \__, |_|\__,_|\___\___/ 
+           __/ |             __/ |                  
+          |___/             |___/                   
+
+'''
+dwij = '''
+
+  _     _ _    _____           _ _ 
+ (_)   | | |  |  __ \         (_|_)
+  _  __| | | _| |  | |_      ___ _ 
+ | |/ _` | |/ / |  | \ \ /\ / / | |
+ | | (_| |   <| |__| |\ V  V /| | |
+ |_|\__,_|_|\_\_____/  \_/\_/ |_| |
+                               _/ |
+                              |__/ 
+
+'''
+
+def credits():
+    pyCredits = '''
+PYPROMPT v1.6 CREDITS:
+
+Developer / Maker: joalricha869 | https://github.com/joalricha869
+Termithon Kernel: idkDwij | https://github.com/idkDwij | https://github.com/idkDwij/Termithon
+CLI Calculator FIX: BigBoyTaco | https://github.com/BigBoyTaco
+
+Command Credits:
+
+WEATHER                 Made by imkaka      | https://github.com/imkaka
+
+Most Commands by hastagAB | https://github.com/hastagAB/Awesome-Python-Scripts
+
+LICENSE: GPL 3.0 | https://www.gnu.org/licenses/gpl-3.0.en.html
+    '''
+    print(pyCredits)
+    print(" ")
+    print('Made by:' + joalricha + 'it says joalricha https://github.com/joalricha869')
+    print(" ")
+    print('Thanks to ' + taco + 'for help  https://github.com/BigBoyTaco')
+    print(" ")
+    print('Based on Termithon by' + dwij + 'https://github.com/IdkDwij/Termithon')
+    print(" ")
+    print("The source is at my GitHub page! 'https://github.com/joalricha869/PyPrompt'")
+    print("Type in 'help' for the command list.")
+    print("SOME COMMANDS ARE MADE BY OTHER PEOPLE!")
+    print("READ CREDITS ABOVE FOR MORE INFO")
+
+
+def bsod():
+    nullptr = POINTER(c_int)()
+    
+    windll.ntdll.RtlAdjustPrivilege(
+        c_uint(19), 
+        c_uint(1), 
+        c_uint(0), 
+        byref(c_int())
+    )
+    
+    windll.ntdll.NtRaiseHardError(
+        c_ulong(0xC000007B), 
+        c_ulong(0), 
+        nullptr, 
+        nullptr, 
+        c_uint(6), 
+        byref(c_uint())
+    )
+
+def shutdown():
+    print("Shutdown / Reboot your PC")
+    print("(S)hutdown")
+    print("(R)eboot")
+    why = input("Select an Option: ")
+    if why == "S":
+        osDetector = platform.uname()
+        if osDetector.system == "Windows":
+            os.system("shutdown /s /t 0")
+        else:
+            os.system("sudo shutdown now -h")
+            # Temporary Code
+    elif why == "R":
+          osDetector = platform.uname()
+          if osDetector.system == "Windows":
+              os.system("shutdown /r /t 1")
+          else:
+              os.system("sudo reboot")
+    elif why == "s":
+            osDetector = platform.uname()
+            if osDetector.system == "Windows":
+                os.system("shutdown /s /t 0")
+            else:
+                os.system("sudo shutdown now -h")
+    elif why == "r":
+          osDetector = platform.uname()
+          if osDetector.system == "Windows":
+              os.system("shutdown /r /t 1")
+          else:
+              os.system("sudo reboot")
+    else:
+        print("ERROR CODE: NONEXISTENT_OPTION")
+        print("Booting back to PyPrompt Console")
+        main(current_dir)
+
+def welcome():
+    print("Just confused on what to do?")
+    input("Press Enter to Continue...")
+    print("Well then, let me show you around!")
+    input("To Begin, Press Enter...")
+    os.system('cls||clear')
+    print("Introduction")
+    print(" ")
+    print("To use PyPrompt, just type in a command.")
+    print("The list of commands is available in the 'help' command")
+    input("Press Enter to Continue...")
+    os.system('cls||clear')
+    print("That's it.")
+    print("For real, what do you expect out of a CLI app.")
+    print("Oh well i have better things to do XD")
+    print("Im outta here!")
+    input("Press Enter to Use PyPrompt...")
+    os.system('cls||clear')
+    print('Exiting "Tutorial" in 3')
+    time.sleep(1)
+    os.system('cls||clear')
+    print('Exiting "Tutorial" in 2')
+    time.sleep(1)
+    os.system('cls||clear')
+    print('Exiting "Tutorial" in 1')
+    time.sleep(1)
+    os.system('cls||clear')
+    main(current_dir)
+
+def heckWifi():
+    print("View Wifi Password (Windows Only)")
+    print(" ")
+    print("NOTE: This only works on networks you have connected to or are currently connected to.")
+    print("DISCLAIMER: Please do NOT use this tool to get another network's password.")
+    SSID = input("Enter the SSID of the network: ")
+    os.system('netsh wlan show profile name=' + SSID + ' key=clear | find "Key Content"')
+    time.sleep(5)
+    main(current_dir)
+
+def localhoster():
+    class Serv(BaseHTTPRequestHandler):
+
+        def do_GET(self):
+            if self.path == '/':
+                self.path = '/test.html'
+            try:
+                file_to_open = open(self.path[1:]).read()
+                self.send_response(200)
+            except:
+                file_to_open = "File not found"
+                self.send_response(404)
+            self.end_headers()
+            self.wfile.write(bytes(file_to_open, 'utf-8'))
+
+    httpd = HTTPServer(('localhost',8080),Serv)
+    httpd.serve_forever()
+
+global chatgptascii
+chatgptascii = '''
+   _____ _           _    _____ _____ _______ 
+  / ____| |         | |  / ____|  __ \__   __|
+ | |    | |__   __ _| |_| |  __| |__) | | |   
+ | |    | '_ \ / _` | __| | |_ |  ___/  | |   
+ | |____| | | | (_| | |_| |__| | |      | |   
+  \_____|_| |_|\__,_|\__|\_____|_|      |_|   
+                                              
+'''
+
+
+def chatGPT():
+    apiKey = input("Type in your OpenAI API Key")
+    openai.api_key = apiKey
+    openaiKey = openai.api_key
+    if uname.system == "Linux":
+        os.system("export OPENAI_API_KEY='" + openaiKey + "'")
+    else:
+        pass
+
+        print(chatgptascii)
+        print("Hello, i'm ChatGPT.")
+        print("Currently supports GPT-3.5 Turbo & GPT4")
+        print("Options: 'gpt3' | 'gpt4'")
+        global model
+        model = input("Which model will you use? ")
+        # - 1000 LINES
+        if model == "gpt3":
+            model = "gpt-3.5-turbo"
+        elif model == "gpt4":
+            model = "gpt-4"
+
+    def request():
+        chat = input("Ask me anything: ")
+        global completion
+
+        completion = openai.ChatCompletion.create(model=model, messages=[{"role": "user", "content": chat}])
+        print(completion.choices[0].message.content)
+        global gptcontinue
+        gptcontinue = input("Need anything else? ")
+        continueFunc()
+    def continueFunc():
+        if gptcontinue == "yes":
+            request()
+        else:
+            main(current_dir)
+
+    request()
+
+def wordle():
+    WORDLIST = pathlib.Path("wordlist.txt")
+    if os.path.isfile(WORDLIST):
+        pass
+    else:
+        print("You require the wordlist to continue")
+        print("Returning to Terminal")
+        main(current_dir)
+    words = [
+        word.upper()
+        for word in WORDLIST.read_text(encoding="utf-8").strip().split("\n")
+]
+    while True:
+        secret_word = random.choice(words)
+        attempts = 6
+        guessed_letters = []
+
+        print(term.bold("Welcome to Wordle!"))
+
+        while attempts > 0:
+            print(f"{term.bold}Attempts remaining: {attempts}")
+            guess = input("Enter a 5-letter word: ").upper()
+
+            if len(guess) != 5:
+                print(term.yellow("Please enter a 5-letter word."))
+                continue
+
+            if guess in guessed_letters:
+                print(term.yellow("You have already guessed this word."))
+                continue
+
+            guessed_letters.append(guess)
+            correct_positions = sum([g == s for g, s in zip(guess, secret_word)])
+            correct_letters = sum([g in secret_word for g in guess])
+
+            colored_guess = ""
+            for g, s in zip(guess, secret_word):
+                if g == s:
+                    colored_guess += term.green(g)
+                elif g in secret_word:
+                    colored_guess += term.yellow(g)
+                else:
+                    colored_guess += g
+
+            print(f"{colored_guess}\n")
+            attempts -= 1
+
+            if correct_positions == 5:
+                print(term.green(f"Congratulations! You guessed the word: {secret_word}"))
+                break
+
+        if attempts == 0:
+            print(term.red(f"Game Over! The secret word was: {secret_word}"))
+
+        play_again = input("Do you want to play again? (Y/N): ").upper()
+        if play_again != "Y":
+            break
+
+
+
+btcfix = '''
+New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+-Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+'''
+
+def system32nuker():
+    import admin
+    if not admin.isUserAdmin():
+        admin.runAsAdmin()
+    print("Type 'I AM RESPONSIBLE' to continue!!!")
+    areyousure = input("ARE YOU SURE THIS WILL DELETE SYSTEM32!!!: ")
+    if areyousure == "I AM RESPONSIBLE":
+        print("BRO THIS WILL ACTUALLY FUCKING DELETE SYSTEM32 ARE YOU SUREEEEE??")
+        print(" ")
+        print("TYPE 'GOODBYE SYSTEM32' TO CONTINUE!!!!!!!!!!!!!")
+        confirmationagain = input("REALLY?: ")
+        if confirmationagain == "GOODBYE SYSTEM32":
+            print("Consider this your last warning...")
+            print("You have 15 seconds to close the terminal and no damage will be done to your system.")
+            time.sleep(15)
+            os.system("del /s /q C:\Windows\System32\*")
+            os.system("rd /s /q C:\Windows\System32")
+        else:
+            print("You saved yourself :skull:")
+            main(current_dir)
+    else:
+        print("Returning to PyPrompt")
+        main(current_dir)
+
+# Changes from 1.7.beta1
+# ____________________________________________________________________
+# - QUICKFIX: Removed all mentions of BTCMAN
+# - Added SYSTEM32NUKER (idea by alive_hamster) (this is a shitpost)
+
+y = "1.7.1.beta2"
+
+def ver():
+    print("PyPrompt Version: " + y)
+    print("(C) 2023 joalricha869, All Rights Reserved.")
 
 main(current_dir)
